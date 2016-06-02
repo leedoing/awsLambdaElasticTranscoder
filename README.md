@@ -2,6 +2,9 @@ Using AWS Lambda, Elastic transcoder
 ====================================================
 
 >## Using a S3, IAM, Lambda and Elastic Transcoder
+>## Workflow
+>![alt tag](http://cfile21.uf.tistory.com/image/261EF445574F8CE30F1F8A)
+
 >## IAM Role
 ```json
 {
@@ -96,6 +99,6 @@ exports.handler = function(event, context) {
 [Configuring the SDK](http://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/ElasticTranscoder.html)
 
 >##Blog
->I explained this workflow into Korean</br>
+>I explained this into Korean</br>
 >[leedoing](http://blog.leedoing.com/category/Application%20Service/ElasticTranscoder)
 
