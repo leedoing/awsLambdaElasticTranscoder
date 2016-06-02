@@ -95,5 +95,5 @@ exports.handler = function(event, context) {
 >##AWS Document
 [Configuring the SDK](http://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/ElasticTranscoder.html)
 
->##My Blog
+>##Blog
 [leedoing](http://blog.leedoing.com/category/Application%20Service/ElasticTranscoder)
