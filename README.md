@@ -2,7 +2,6 @@ Using AWS Lambda, Elastic transcoder
 ====================================================
 
 >## Using a S3, IAM, Lambda and Elastic Transcoder
-===
 >## IAM Role
 ```json
 {
@@ -41,7 +40,6 @@ Using AWS Lambda, Elastic transcoder
     ]
 }
 ```
-===
 >##Lambda(using a javscript sdk)
 ```javascript
 var aws = require('aws-sdk');
@@ -73,7 +71,6 @@ exports.handler = function(event, context) {
         }
       ]
     };
-     
     s3.deleteObject(s3Params, function(err, data){ //async(deleteobject, transcoding)
         if(err){
             console.log('s3 object delete failed');
