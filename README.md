@@ -1,11 +1,10 @@
 Using AWS Lambda, Elastic transcoder
 ====================================================
 
->## Using a S3, IAM, Lambda and Elastic Transcoder
->## Workflow
->![alt tag](http://cfile21.uf.tistory.com/image/261EF445574F8CE30F1F8A)
+## Workflow
+![alt tag](http://cfile21.uf.tistory.com/image/261EF445574F8CE30F1F8A)
 
->## IAM Role
+## IAM Role
 ```json
 {
     "Version": "2012-10-17",
@@ -43,7 +42,7 @@ Using AWS Lambda, Elastic transcoder
     ]
 }
 ```
->##Lambda(using a javscript sdk)
+##Lambda(using a javscript sdk)
 ```javascript
 var aws = require('aws-sdk');
 var elastictranscoder = new aws.ElasticTranscoder();
@@ -95,10 +94,10 @@ exports.handler = function(event, context) {
     });
 };
 ```
->##AWS Document
+##AWS Document
 [Configuring the SDK](http://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/ElasticTranscoder.html)
 
->##Blog
->I explained this into Korean</br>
->[leedoing](http://blog.leedoing.com/category/Application%20Service/ElasticTranscoder)
+##Blog
+I explained this into Korean</br>
+[leedoing](http://blog.leedoing.com/category/Application%20Service/ElasticTranscoder)
 
