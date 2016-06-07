@@ -98,6 +98,6 @@ exports.handler = function(event, context) {
 [Configuring the SDK](http://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/ElasticTranscoder.html)
 
 ##Blog
-I explained this into Korean</br>
+I describe it on my blog in korean</br>
 [leedoing](http://blog.leedoing.com/category/Application%20Service/ElasticTranscoder)
 
