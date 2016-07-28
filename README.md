@@ -43,7 +43,7 @@ Using AWS Lambda, Elastic transcoder
 }
 ```
 
-```
+```javascript
 ##Lambda(using a javscript sdk)
 var aws = require('aws-sdk');
 var elastictranscoder = new aws.ElasticTranscoder();
