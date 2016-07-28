@@ -43,54 +43,133 @@ Using AWS Lambda, Elastic transcoder
 }
 ```
 ##Lambda(using a javscript sdk)
-```javascript
 var aws = require('aws-sdk');
 var elastictranscoder = new aws.ElasticTranscoder();
 var s3 = new aws.S3();
+var filename = function(path){ //upload object filename
+    var pathSplit = path.split('.')[0];
+    var arraySize = pathSplit.split('/').length-1;
+    var filename = pathSplit.split('/')[arraySize];
+    return filename;
+}
+var prefix = function(path){ //upload object prefix
+    var pathSplit = path.split('.')[0];
+    var arraySize = pathSplit.split('/').length-1;
+    var prefix = '';
+    for(var i=0; i<arraySize; i++){
+        var text = pathSplit.split('/')[i];
+        prefix=prefix.concat(text)+'/';
+    }
+    return prefix;
+}
+var listObject = function(params, callback){
+    s3.listObjects(params, function(err, data){
+        params.Delete = {Objects:[]};
+        if(err) console.log(err, err.stack);
+        else{
+            console.log('listing Object...');
+            data.Contents.forEach(function(result){
+                params.Delete.Objects.push({Key: result.Key});
+            })
+            delete params.Prefix;
+            callback(params);
+            return
+        }
+    });
+}
+var deleteObject = function(params){
+    listObject(params, function(deleteParams){
+        console.log(deleteParams);
+        s3.deleteObjects(deleteParams, function(err, data){
+            if (err) console.log(err, err.stack); // an error occurreddeleteObjcects 
+            else console.log(data);           // successful response
+            console.log('delete Object...');
+        });
+    });
+}
 exports.handler = function(event, context) {
     console.log('Received event:', JSON.stringify(event, null, 2));
     // Get the object from the event and show its content type
     var key = event.Records[0].s3.object.key;
-    var s3Params = {
-        Bucket: 'leedoing-transcoding', //output bucket name
-        Key: key.split('.')[0]+'.mp4' //object name
+    var s3Params_5m = {
+        Bucket: '5m_media-transcoding', //output bucket name
+        Prefix: prefix(key) + filename(key) + '_5M.' + key.split('.')[1] + '/' //S3 In/Output Object Prefix
     };
-    var etParams = {
-      Input: {
+    var s3Params_2m = {
+        Bucket: '2m_media-transcoding', //output bucket name
+        Prefix: prefix(key) + filename(key) + '_2M.' + key.split('.')[1] + '/'
+    };
+ 
+    deleteObject(s3Params_5m);
+    deleteObject(s3Params_2m);
+ 
+    var etsParams_5m = {
+        Input: {
         Key: key
-      },
-      PipelineId: '1464587330316-a37yxe', // pipeline ID
-      Outputs: [
-        {
-            Key: key.split('.')[0]+'.mp4',
-            PresetId: '1351620000001-000001', //transcoding presetID(ex. gerneric1080p)
-            Watermarks: [
-                {
-                InputKey: 'watermark.png',
-                PresetWatermarkId: 'TopRight'
-                }
-            ]
-        }
-      ]
+        },
+        PipelineId: 'xxx-4o47oe', // pipeline ID
+        OutputKeyPrefix: prefix(key) + filename(key) + '_5m.' + key.split('.')[1] + '/',
+        Outputs: [
+            {
+                Key: filename(key),
+                PresetId: 'xxxxxx-97mimb',
+                SegmentDuration: '10'
+            }
+        ],
+        Playlists: [
+            {
+                Format: 'HLSv3',
+                Name: 'playlist',
+                OutputKeys: [
+                filename(key)
+                ]
+            }
+        ]
     };
-    s3.deleteObject(s3Params, function(err, data){ //async(deleteobject, transcoding)
+    var etsParams_2m = {
+        Input: {
+        Key: key
+        },
+        PipelineId: 'xxx-4o47oe', // pipeline ID
+        OutputKeyPrefix: prefix(key) + filename(key) + '_2m.' + key.split('.')[1] + '/',
+        Outputs: [
+            {
+                Key: filename(key),
+                PresetId:'xxxxxx-5nj36s', //default copy
+                SegmentDuration: '10'
+            }
+        ],
+        Playlists: [
+            {
+                Format: 'HLSv3',
+                Name: 'playlist',
+                OutputKeys: [
+                filename(key)
+                ]
+            }
+        ]
+    };
+ 
+ 
+    elastictranscoder.createJob(etsParams_5m, function(err, data) {
         if(err){
-            console.log('s3 object delete failed');
-            console.log(err, err.stack);
+            console.log('transcoding_5m failed');
+            console.log(err, err.stack); // an error occurred
             context.fail();
         }else{
-            console.log('s3 objcet delete succceed');
-            elastictranscoder.createJob(etParams, function(err, data) {
-                if(err){
-                    console.log('transcoding failed');
-                    console.log(err, err.stack); // an error occurred
-                    context.fail();
-                }else{
-                    console.log('transcoding succeed')
-                    context.succeed('transcoding succeed');
-                }
-            });
-        } 
+            console.log('transcoding_5m succeed')
+            context.succeed('transcoding_5m succeed');
+        }
+    });
+    elastictranscoder.createJob(etsParams_2m, function(err, data) {
+        if(err){
+            console.log('transcoding_2m failed');
+            console.log(err, err.stack); // an error occurred
+            context.fail();
+        }else{
+            console.log('transcoding_2m succeed')
+            context.succeed('transcoding_2m succeed');
+        }
     });
 };
 ```
