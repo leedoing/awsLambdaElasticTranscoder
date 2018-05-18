@@ -180,5 +180,5 @@ exports.handler = function(event, context) {
 
 ##Blog
 I described it on my blog(korean)</br>
-[leedoing](http://blog.leedoing.com/category/Application%20Service/ElasticTranscoder)
+[leedoing](http://blog.leedoing.com/53)
 
